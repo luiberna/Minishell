@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/02 13:29:40 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/05/02 12:53:08 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_cmd   *lexer_args(char *input, char **envp)
 
     i = 0;
     flag = 1;
-    lx_input = malloc(sizeof(char) * (ft_strlen(input) + 1));
+    lx_input = ft_calloc(sizeof(char), (ft_strlen(input) + 1));
     while (input[i])
     {
         if (input[i] == ' ' && flag == 1)

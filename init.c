@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/02 13:47:24 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/05/01 16:19:44 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char	*get_path(char *cmd, char **envp)
 	}
 	return (free_list(paths), NULL);
 }
+
 /*Cria uma node (cmd) com toda a informacao necessaria para o comando.
 O pipe (fd) pode ser inicializado com valores 0 e 1 pois vao ser alterados mais tarde.
 O PID pode ser inicializado com valor 0 pois vai ser alterado quando utilizarmos a fork()*/
@@ -48,7 +49,7 @@ t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
     if (!cmd)
         return (NULL);
     cmd->cmd = ft_split(sep_cmd, '\3');
-    cmd->path = get_path(cmd->cmd[0], envp);
+    cmd->path = get_path(sep_cmd, envp);
     cmd->nb_cmds = i + 1;
     if (cmd->nb_cmds == 1)
         cmd->prev = NULL;
@@ -60,6 +61,7 @@ t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
     cmd->pid = 0;
     return(cmd);
 }
+
 /*Inicializa a double linked list (struct t_cmd) criando todas as nodes com a informacao
 necessaria a cada comando*/
 t_cmd    *init_cmd(char *input, char **envp)

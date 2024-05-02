@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/02 16:26:30 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:42:21 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 # define MINISHELL_H
 
 # include "libft.h"
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <sys/wait.h>
 # include <signal.h>
 # include <errno.h>
-# include <term.h> 
 # include <termios.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef struct s_amb
 {
