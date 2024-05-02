@@ -1,0 +1,14 @@
+/*Para usar na main, testa se o parsing do input esta correto*/
+
+// while (cmd->next != NULL)
+//     cmd = cmd->next;
+// while(cmd != NULL)
+// {
+//     i = 0;
+//     while (cmd->cmd[i])
+//     {
+//         printf("Comando numero:%i, Linha numero %i: %s\n",cmd->nb_cmds, i, cmd->cmd[i]);
+//         i++;
+//     }
+//     cmd = cmd->prev;
+// }
