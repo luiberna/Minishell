@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/01 16:20:30 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/05/02 16:26:30 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ t_cmd   *lexer_args(char *input, char **envp);
 
 //free
 void    free_list(char **list);
+void    free_cmd(t_cmd *cmd);
 
 #endif
