@@ -6,13 +6,13 @@
 #    By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/27 12:32:15 by luiberna          #+#    #+#              #
-#    Updated: 2024/04/30 18:59:11 by luiberna         ###   ########.fr        #
+#    Updated: 2024/05/07 22:29:19 by luiberna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = minishell.c parsing.c init.c free.c
+SRCS = minishell.c parsing.c init.c free.c env.c
 
 CC = cc
 

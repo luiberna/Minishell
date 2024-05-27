@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/01 16:19:44 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/05/04 18:28:16 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,15 @@ O PID pode ser inicializado com valor 0 pois vai ser alterado quando utilizarmos
 t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
 {
     t_cmd *cmd;
-
+    int j;
+    
+    j = 0;
     cmd = ft_calloc(sizeof(t_cmd), sizeof(t_cmd));
     if (!cmd)
         return (NULL);
     cmd->cmd = ft_split(sep_cmd, '\3');
-    cmd->path = get_path(sep_cmd, envp);
+    while (cmd->cmd[j] && (cmd->path = get_path(cmd->cmd[j], envp)) == NULL)
+        j++;
     cmd->nb_cmds = i + 1;
     if (cmd->nb_cmds == 1)
         cmd->prev = NULL;
