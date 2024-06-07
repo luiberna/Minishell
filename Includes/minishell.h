@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/05 20:07:23 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/07 16:54:43 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,14 @@ t_cmd   *lexer_args(char *input, char **envp);
 //pipes
 void	close_fds(t_cmd *cmd);
 void	error_msg(char *str);
-void	free_paths(char **paths);
 void    execve_aux(t_cmd *cmd, t_env *env);
 void    command_exec(t_cmd *cmd, t_env *env);
 void    pipes_exec(t_cmd *cmd, t_env *env);
+void    setup_pipes(t_cmd *cmd);
 
+//redirect
+void    remove_redirection(t_cmd *cmd, int i);
+void    redirect_in(t_cmd *cmd, int i);
+void    redirections(t_cmd *cmd);
 
 #endif

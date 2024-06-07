@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/04 18:28:16 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:07:06 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
     cmd->next = NULL;
     cmd->fd[0] = 0;
     cmd->fd[1] = 1;
+    cmd->fd_redirect[0] = 0;
+    cmd->fd_redirect[1] = 1;
     cmd->pid = 0;
     return(cmd);
 }

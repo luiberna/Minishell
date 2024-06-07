@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/05 20:25:53 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/07 17:12:17 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void command_exec(t_cmd *cmd, t_env *env)
             dup2(cmd->fd[1], STDOUT_FILENO); //Redireciona o output para o proximo comando
             close(cmd->fd[1]); //Fecha o fd original
         }
+        redirections(cmd);
         close_fds(cmd); //Fecha todos os fds na child
         execve_aux(cmd, env); //Executa o comando na child
         exit(0);
@@ -101,8 +102,6 @@ void    setup_pipes(t_cmd *cmd)
 void pipes_exec(t_cmd *cmd, t_env *env)
 {
     t_cmd *curr;
-    int pipefd[2];
-    pid_t pid;
 
     setup_pipes(cmd);
     curr = cmd;
