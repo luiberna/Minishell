@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/07 17:12:17 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:45:59 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,11 @@ void execve_aux(t_cmd *cmd, t_env *env)
 {
     if (!cmd->cmd || !cmd->cmd[0])
         free(cmd->path);
+    if (cmd->cmd[0][0] == '/' && (access(cmd->cmd[0], F_OK) == 0))
+    {
+        free(cmd->path);
+        cmd->path = ft_strdup(cmd->cmd[0]);
+    }
     if (execve(cmd->path, cmd->cmd, env->envp) == -1)
         error_msg("Error on execve");
     exit(1);
@@ -77,7 +82,7 @@ void command_exec(t_cmd *cmd, t_env *env)
         exit(0);
     }
     else if (pid < 0)
-        error_msg("Erro no fork");
+        error_msg("Erro on fork");
 }
 
 void    setup_pipes(t_cmd *cmd)

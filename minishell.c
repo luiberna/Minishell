@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 16:23:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/06 17:19:43 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:38:17 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int main (int argc, char **argv, char **envp)
         input = readline("DrunkShell \U0001F37A> ");
         add_history(input);
         cmd = lexer_args(input, env->envp);
+        // execute(cmd, env);
         pipes_exec(cmd, env);
         //check_cmd(cmd, env->envp);
         free(input);

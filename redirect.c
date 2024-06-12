@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/07 17:17:23 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/11 15:01:11 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void    redirect_in(t_cmd *cmd, int i)
     file_in = open(cmd->cmd[i + 1], O_RDONLY, 0777);
     if (file_in == -1)
     {
-        ft_printf("\033[31mError: Invalid infile\n\3[0m", 2);
+        write(2, "Error: Invalid infile\n", 23);
         close_fds(cmd);
         exit(1);
     }
@@ -46,7 +46,22 @@ void    redirect_out(t_cmd *cmd, int i)
     file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
     if (file_out == -1)
     {
-        ft_printf("\033[31mError: Invalid outfile\n\3[0m", 2);
+        write(2, "Error: Invalid outfile\n", 24);
+        close_fds(cmd);
+        exit(1);
+    }
+    dup2(file_out, STDOUT_FILENO);
+    close(file_out);
+}
+
+void appending_out(t_cmd *cmd, int i)
+{
+    int file_out;
+
+    file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+    if (file_out == -1)
+    {
+        write(2, "Error: Invalid outfile\n", 24);
         close_fds(cmd);
         exit(1);
     }
@@ -66,13 +81,16 @@ void    redirections(t_cmd *cmd)
             redirect_in(cmd, i);
             remove_redirection(cmd, i);
         }
+        else if (ft_strncmp(cmd->cmd[i], ">>", 2) == 0)
+        {
+            appending_out(cmd, i);
+            remove_redirection(cmd, i);
+        }
         else if (ft_strncmp(cmd->cmd[i], ">", 1) == 0)
         {
             redirect_out(cmd, i);
             remove_redirection(cmd, i);
         }
-        // else if (ft_strncmp(cmd->cmd[i], ">>", 2) == 0)
-        //     appending_out(cmd, i);
         // else if (ft_strncmp(cmd->cmd[i], "<<", 2) == 0)
         //     here_doc(cmd, i);
         else
