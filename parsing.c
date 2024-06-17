@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/28 15:53:31 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/14 16:48:59 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int     arglen(char *input)
     
     i = 0;
     len = 0;
+    while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
+        i++;
     while (input[i])
     {
         if (input[i] == '>' && input[i + 1] == '>' || input[i] == '<' && input[i + 1] == '<')
@@ -59,6 +61,8 @@ t_cmd   *lexer_args(char *input, char **envp)
     flag = 1;
     flag2 = 1;
     lx_input = ft_calloc(sizeof(char), (arglen(input) + 1));
+    while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
+        i++;
     while (input[i])
     {
         if (input[i] == ' ' && flag == 1 && flag2 == 1)

@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/07 16:54:43 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/17 23:38:18 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,6 @@ void    setup_pipes(t_cmd *cmd);
 void    remove_redirection(t_cmd *cmd, int i);
 void    redirect_in(t_cmd *cmd, int i);
 void    redirections(t_cmd *cmd);
+void    redirect_here(t_cmd *cmd);
 
 #endif

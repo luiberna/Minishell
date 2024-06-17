@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pipes.c                                            :+:      :+:    :+:   */
+/*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/12 14:45:59 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/17 23:38:03 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void execve_aux(t_cmd *cmd, t_env *env)
         free(cmd->path);
         cmd->path = ft_strdup(cmd->cmd[0]);
     }
-    if (execve(cmd->path, cmd->cmd, env->envp) == -1)
+    if (execve(cmd->path, cmd->cmd, env->envp) == -1) //<-----integrar o exec
         error_msg("Error on execve");
     exit(1);
 }
@@ -66,6 +66,7 @@ void command_exec(t_cmd *cmd, t_env *env)
     pid = fork();
     if (pid == 0) //Child process
     {
+        redirect_here(cmd);
         if (cmd->fd[0] > 2)
         {
             dup2(cmd->fd[0], STDIN_FILENO); //Redireciona o input do comando anterior
@@ -88,17 +89,17 @@ void command_exec(t_cmd *cmd, t_env *env)
 void    setup_pipes(t_cmd *cmd)
 {
     t_cmd *curr;
-    int pipefd[2];
+    int pipe_fd[2];
 
     curr = cmd;
     while (curr)
     {
         if (curr->next)
         {
-            if (pipe(pipefd) == -1)
+            if (pipe(pipe_fd) == -1)
                 error_msg("Error on pipe");
-            curr->fd[1] = pipefd[1];
-            curr->next->fd[0] = pipefd[0];
+            curr->fd[1] = pipe_fd[1];
+            curr->next->fd[0] = pipe_fd[0];
         }
         curr = curr->next;
     }
