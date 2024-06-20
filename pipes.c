@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/17 23:38:03 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/20 17:01:11 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ void execve_aux(t_cmd *cmd, t_env *env)
         free(cmd->path);
         cmd->path = ft_strdup(cmd->cmd[0]);
     }
-    if (execve(cmd->path, cmd->cmd, env->envp) == -1) //<-----integrar o exec
+    // if (execve(cmd->path, cmd->cmd, env->envp) == -1) //<-----integrar o exec
+    //     error_msg("Error on execve");
+    if (execute(cmd, env) == -1)
         error_msg("Error on execve");
     exit(1);
 }
