@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/17 23:38:18 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/21 17:13:40 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ typedef struct s_cmd
 t_env   *get_env(char **envp);
 
 //exec
-void    execute(t_cmd *cmd, t_env *env);
+int    execute(t_cmd *cmd, t_env *env);
+
+//expander
+void    expander(t_cmd *cmd, t_env *env);
 
 //free
 void    free_list(char **list);
@@ -70,7 +73,10 @@ void    setup_pipes(t_cmd *cmd);
 //redirect
 void    remove_redirection(t_cmd *cmd, int i);
 void    redirect_in(t_cmd *cmd, int i);
-void    redirections(t_cmd *cmd);
+void    redirect_out(t_cmd *cmd, int i);
+void    appending_out(t_cmd *cmd, int i);
+void    here_doc(t_cmd *cmd, int i);
 void    redirect_here(t_cmd *cmd);
+void    redirections(t_cmd *cmd);
 
 #endif

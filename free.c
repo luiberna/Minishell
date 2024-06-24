@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:24:26 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/02 17:00:39 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/21 17:45:11 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void    free_list(char **list)
     }
     free(list);
 }
+
 void    free_cmd(t_cmd *cmd)
 {
     t_cmd *curr;

@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/14 16:48:59 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/06/22 12:26:58 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int     arglen(char *input)
     int i;
     int len;
     
-    i = 0;
     len = 0;
     while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
         i++;
