@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/24 21:25:30 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/03 01:56:29 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,35 @@
 /*Aumenta a lenght consoante a existencia de redirections sendo que antes e apos a redirection precisamos de um indicador
 '\3' para indicar a existencia de um novo argumento para prevenir ">>>", ">teste" ou "echo "hello">o" separando "\3>>\3>" "\3>\3teste"
 respetivamente*/
-int     arglen(char *input)
-{
-    int i;
-    int len;
+// int     arglen(char *input)
+// {
+//     int i;
+//     int len;
     
-    i = 0;
-    len = 0;
-    while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
-        i++;
-    while (input[i])
-    {
-        if (input[i] == '>' && input[i + 1] == '>' || input[i] == '<' && input[i + 1] == '<')
-        {
-            len = len + 4;
-            i = i + 2;
-        }
-        else if (input[i] == '>' || input[i] == '<')
-        {
-            len = len + 3;
-            i++;
-        }
-        else
-        {
-            len++;
-            i++;
-        }
-    }
-    return (len);
-}
+//     i = 0;
+//     len = 0;
+//     while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
+//         i++;
+//     while (input[i])
+//     {
+//         if (input[i] == '>' && input[i + 1] == '>' || input[i] == '<' && input[i + 1] == '<')
+//         {
+//             len = len + 4;
+//             i = i + 2;
+//         }
+//         else if (input[i] == '>' || input[i] == '<')
+//         {
+//             len = len + 3;
+//             i++;
+//         }
+//         else
+//         {
+//             len++;
+//             i++;
+//         }
+//     }
+//     return (len);
+// }
 
 /*Divide o input por comandos e respetivos argumentos substituindo as pipes ('|') por um caracter inexistente
 '\4' e separando os comandos dos argumentos substituindo os espacos por '\3'.
@@ -60,9 +60,7 @@ t_cmd   *lexer_args(char *input, char **envp)
     j = 0;
     flag = 1;
     flag2 = 1;
-    lx_input = ft_calloc(sizeof(char), (arglen(input) + 1));
-    while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
-        i++;
+    lx_input = ft_calloc(sizeof(char), (ft_strlen(input) * 3));
     while (input[i])
     {
         if (input[i] == ' ' && flag == 1 && flag2 == 1)
@@ -76,7 +74,7 @@ t_cmd   *lexer_args(char *input, char **envp)
             lx_input[j++] = input[i];
             lx_input[j++] = '\3';
         }
-        else if((input[i] == '>' || input[i] == '<') && flag == 1 && flag2 == 1)
+        else if ((input[i] == '>' || input[i] == '<') && flag == 1 && flag2 == 1)
         {
             lx_input[j++] = '\3';
             lx_input[j++] = input[i];
@@ -92,9 +90,9 @@ t_cmd   *lexer_args(char *input, char **envp)
             flag2 *= -1;
             lx_input[j++] = input[i];
         }
-        else if (flag == 1 || flag2 == 1)
+        else if (flag == 1 && flag2 == 1)
             lx_input[j++] = input[i];
-        else if (flag == -1 || flag2 == -1)
+        else
             lx_input[j++] = input[i];
         i++;
     }

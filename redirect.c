@@ -6,15 +6,15 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/17 23:39:39 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/03 03:23:12 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*Anda com os elementos para a esquerda e remove a redirection e o file*/
 void remove_redirection(t_cmd *cmd, int i)
 {
-    //Anda com os elementos para a esquerda e remove a redirection e o file
     while (cmd->cmd[i + 2])
     {
         cmd->cmd[i] = cmd->cmd[i + 2];
@@ -28,6 +28,8 @@ void    redirect_in(t_cmd *cmd, int i)
 {
     int file_in;
 
+    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+        error_msg("Parse error near '<'");
     file_in = open(cmd->cmd[i + 1], O_RDONLY, 0777);
     if (file_in == -1)
     {
@@ -43,6 +45,8 @@ void    redirect_out(t_cmd *cmd, int i)
 {
     int file_out;
     
+    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+        error_msg("Parse error near '>'");
     file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
     if (file_out == -1)
     {
@@ -58,6 +62,8 @@ void appending_out(t_cmd *cmd, int i)
 {
     int file_out;
 
+    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+        error_msg("Parse error near '>>'");
     file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
     if (file_out == -1)
     {
@@ -69,57 +75,62 @@ void appending_out(t_cmd *cmd, int i)
     close(file_out);
 }
 
-void here_doc(t_cmd *cmd, int i)
+void here_doc(t_cmd *cmd, int i, int write_fd) 
 {
-    int pipe_fd[2];
     char *line;
 
-    if (pipe(pipe_fd) == -1)
-    {
-        write(2, "Error: Pipe creation failed\n", 28);
-        close_fds(cmd);
-        exit(1);
-    }
-    if (!cmd->cmd[i + 1])
-    {
-        write(2, "Error: Reading input failed\n", 28);
-        close(pipe_fd[0]);
-        close(pipe_fd[1]);
-        close_fds(cmd);
-        exit(1);
-    }
+    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+        error_msg("Parse error near '<<'");
     while (1)
     {
         line = readline("> ");
-        if (ft_strncmp(line, cmd->cmd[i + 1], ft_strlen(cmd->cmd[i + 1])) == 0)
+        if (line == NULL || strcmp(line, cmd->cmd[i + 1]) == 0)
         {
             free(line);
             break;
         }
-        write(pipe_fd[1], line, ft_strlen(line));
-        write(pipe_fd[1], "\n", 1);
+        write(write_fd, line, strlen(line));
+        write(write_fd, "\n", 1);
         free(line);
     }
-    close(pipe_fd[1]);
-    dup2(pipe_fd[0], STDIN_FILENO);
-    close(pipe_fd[0]);
 }
 
-void    redirect_here(t_cmd *cmd)
+// void check_pipe(t_cmd *cmd, int i, int pipe_fd[2]) <------- Pode dar problemas verificar com VALGRIND
+// {
+//    if (!cmd->cmd[i + 1])
+//     {
+//         close(pipe_fd[0]);
+//         close(pipe_fd[1]);
+//         close_fds(cmd);
+//         error_msg("Error: Reading input failed");
+//     }
+// }
+
+void redirect_here(t_cmd *cmd)
 {
     int i;
+    int pipe_fd[2];
     
     i = 0;
+    if (pipe(pipe_fd) == -1)
+    {
+        perror("Pipe creation failed");
+        exit(1);
+    }
     while (cmd->cmd[i])
     {
-        if (ft_strncmp(cmd->cmd[i], "<<", 2) == 0)
+        if (strncmp(cmd->cmd[i], "<<", 2) == 0)
         {
-            here_doc(cmd, i);
+            //check_pipe(cmd, i, &pipe_fd[2]); <------- Pode dar problemas verificar com VALGRIND
+            here_doc(cmd, i, pipe_fd[1]);
             remove_redirection(cmd, i);
         }
         else
             i++;
     }
+    close(pipe_fd[1]); // Fecha a write da pipe
+    dup2(pipe_fd[0], STDIN_FILENO); // Redirect da read da pipe para o STDIN
+    close(pipe_fd[0]); // Fecha a read da pipe
 }
 
 void    redirections(t_cmd *cmd)
@@ -129,7 +140,7 @@ void    redirections(t_cmd *cmd)
     i = 0;
     while (cmd->cmd[i])
     {
-        if(ft_strncmp(cmd->cmd[i], "<", 1) == 0)
+        if(ft_strncmp(cmd->cmd[i], "<", 2) == 0)
         {
             redirect_in(cmd, i);
             remove_redirection(cmd, i);

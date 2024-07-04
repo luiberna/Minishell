@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 16:23:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/24 21:37:10 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/03 01:58:34 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int main (int argc, char **argv, char **envp)
     char *input;
     t_cmd *cmd;
     t_env *env;
+    int i = 0;
     
     if (argc != 1)
         return (ft_printf("Minishell takes no args\n"), 0);

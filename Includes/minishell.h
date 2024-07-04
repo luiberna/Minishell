@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/21 17:13:40 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/03 03:19:52 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void    remove_redirection(t_cmd *cmd, int i);
 void    redirect_in(t_cmd *cmd, int i);
 void    redirect_out(t_cmd *cmd, int i);
 void    appending_out(t_cmd *cmd, int i);
-void    here_doc(t_cmd *cmd, int i);
+void    here_doc(t_cmd *cmd, int i, int write_fd); 
 void    redirect_here(t_cmd *cmd);
 void    redirections(t_cmd *cmd);
 

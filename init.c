@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/21 16:59:55 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/03 03:22:26 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
     int j;
     
     j = 0;
-    cmd = ft_calloc(sizeof(t_cmd), sizeof(t_cmd));
+    cmd = ft_calloc(sizeof(t_cmd), 1);
     if (!cmd)
         return (NULL);
     cmd->cmd = ft_split(sep_cmd, '\3');
@@ -66,6 +66,32 @@ t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
     cmd->pid = 0;
     return(cmd);
 }
+/*Para verificar alguns erros como "ls |   | pwd" ou "   | pwd"*/
+int check_input(char *input)
+{
+    int i;
+    int prev_pipe;
+    
+    i = 0;
+    prev_pipe = 1;
+    while (input[i])
+    {
+        while (input[i] == '\3')
+            i++;
+        if (input[i] == '\4')
+        {
+            if (prev_pipe)
+                return (write(2, "syntax error near unexpected token '|'\n", 40), 0);
+            prev_pipe = 1;
+        }
+        else if (input[i] != '\0')
+            prev_pipe = 0;
+        i++;
+    }
+    if (prev_pipe)
+        return (write(2, "syntax error near unexpected token 'newline'\n", 46), 0);
+    return 1;
+}
 
 /*Inicializa a double linked list (struct t_cmd) criando todas as nodes com a informacao
 necessaria a cada comando*/
@@ -79,14 +105,19 @@ t_cmd    *init_cmd(char *input, char **envp)
     i = 1;
     if (input[0] == '\0')
         return (NULL);
-    sep_cmd = ft_split(input, '\4');
-    fst_cmd = create_cmd(sep_cmd[0], NULL, 0, envp);
-    curr_cmd = fst_cmd;
-    while(sep_cmd[i])
+    if (check_input(input) == 0)
+        return(NULL);
+    else
     {
-        curr_cmd->next = create_cmd(sep_cmd[i], curr_cmd, i, envp);
-        curr_cmd = curr_cmd->next;
-        i++;
+        sep_cmd = ft_split(input, '\4');
+        fst_cmd = create_cmd(sep_cmd[0], NULL, 0, envp);
+        curr_cmd = fst_cmd;
+        while(sep_cmd[i])
+        {
+            curr_cmd->next = create_cmd(sep_cmd[i], curr_cmd, i, envp);
+            curr_cmd = curr_cmd->next;
+            i++;
+        }
     }
     return(fst_cmd);
 }
