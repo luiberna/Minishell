@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/03 03:23:12 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/04 17:08:31 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void    redirect_in(t_cmd *cmd, int i)
 {
     int file_in;
 
-    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+    if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
         error_msg("Parse error near '<'");
     file_in = open(cmd->cmd[i + 1], O_RDONLY, 0777);
     if (file_in == -1)
@@ -45,7 +45,7 @@ void    redirect_out(t_cmd *cmd, int i)
 {
     int file_out;
     
-    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+    if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
         error_msg("Parse error near '>'");
     file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
     if (file_out == -1)
@@ -62,7 +62,7 @@ void appending_out(t_cmd *cmd, int i)
 {
     int file_out;
 
-    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+    if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
         error_msg("Parse error near '>>'");
     file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
     if (file_out == -1)
@@ -79,7 +79,7 @@ void here_doc(t_cmd *cmd, int i, int write_fd)
 {
     char *line;
 
-    if (ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
+    if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
         error_msg("Parse error near '<<'");
     while (1)
     {

@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/03 03:03:02 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/09 19:17:33 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,6 @@ void close_fds(t_cmd *cmd)
             close(curr->fd[0]);
         if (curr->fd[1] > 2)
             close(curr->fd[1]);
-        if (curr->fd_redirect[0] > 2)
-            close(curr->fd_redirect[0]);
-        if (curr->fd_redirect[1] > 2)
-            close(curr->fd_redirect[1]);
         curr = curr->next;
     }
     while (nb > 3)/*Nao estava a conseguir fechar
@@ -109,6 +105,19 @@ void    setup_pipes(t_cmd *cmd)
     }
 }
 
+int	is_builtin(char *cmd)
+{
+	if (ft_strncmp(cmd, "cd", 3) == 0)
+        return 1;
+    else if (ft_strncmp(cmd, "export", 8) == 0)
+        return 1;
+    else if (ft_strncmp(cmd, "unset", 7) == 0)
+        return 1;
+    else if (ft_strncmp(cmd, "exit", 5) == 0)
+        return 1;
+	return 0;
+}
+
 void pipes_exec(t_cmd *cmd, t_env *env)
 {
     t_cmd *curr;
@@ -117,7 +126,9 @@ void pipes_exec(t_cmd *cmd, t_env *env)
     curr = cmd;
     while (curr)
     {
-        if (curr->cmd && curr->cmd[0])
+        if(is_builtin(curr->cmd[0])) //Adicionado caso seja builtin - Artur - Atualizei para ser else if
+			execute(curr, env);
+        else if (curr->cmd && curr->cmd[0])
             command_exec(curr, env);
         curr = curr->next;
     }
@@ -125,7 +136,9 @@ void pipes_exec(t_cmd *cmd, t_env *env)
     curr = cmd;
     while (curr)
     {
-        if (waitpid(-1, NULL, 0) == -1) //O primeiro -1 define que o wait deve esperar por qualquer child process
+        if(is_builtin(curr->cmd[0]))
+			;
+        else if (waitpid(-1, NULL, 0) == -1) //O primeiro -1 define que o wait deve esperar por qualquer child process
             error_msg("Error on waitpid");
         curr = curr->next;
     }

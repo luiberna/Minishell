@@ -6,44 +6,50 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/03 01:56:29 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/15 19:09:25 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*Aumenta a lenght consoante a existencia de redirections sendo que antes e apos a redirection precisamos de um indicador
-'\3' para indicar a existencia de um novo argumento para prevenir ">>>", ">teste" ou "echo "hello">o" separando "\3>>\3>" "\3>\3teste"
-respetivamente*/
-// int     arglen(char *input)
-// {
-//     int i;
-//     int len;
-    
-//     i = 0;
-//     len = 0;
-//     while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
-//         i++;
-//     while (input[i])
-//     {
-//         if (input[i] == '>' && input[i + 1] == '>' || input[i] == '<' && input[i + 1] == '<')
-//         {
-//             len = len + 4;
-//             i = i + 2;
-//         }
-//         else if (input[i] == '>' || input[i] == '<')
-//         {
-//             len = len + 3;
-//             i++;
-//         }
-//         else
-//         {
-//             len++;
-//             i++;
-//         }
-//     }
-//     return (len);
-// }
+void remove_quotes(t_cmd *cmd)
+{
+    int i;
+    int j;
+    int k;
+    char *new_str;
+    char quote;
+
+    i = 0;
+    while (cmd)
+    {
+        while (cmd->cmd[i])
+        {
+            new_str = (char *)malloc(ft_strlen(cmd->cmd[i]) + 1);
+            j = 0;
+            k = 0;
+            while (cmd->cmd[i][j])
+            {
+                if (cmd->cmd[i][j] == '\'' || cmd->cmd[i][j] == '\"')
+                {
+                    quote = cmd->cmd[i][j];
+                    j++;
+                    while (cmd->cmd[i][j] && cmd->cmd[i][j] != quote)
+                        new_str[k++] = cmd->cmd[i][j++];
+                    if (cmd->cmd[i][j] == quote)
+                        j++;
+                }
+                else
+                    new_str[k++] = cmd->cmd[i][j++];
+            }
+            new_str[k] = '\0';
+            //free(cmd->cmd[i]);//<---- estava a eliminar o path
+            cmd->cmd[i] = new_str;
+            i++;
+        }
+        cmd = cmd->next;
+    }
+}
 
 /*Divide o input por comandos e respetivos argumentos substituindo as pipes ('|') por um caracter inexistente
 '\4' e separando os comandos dos argumentos substituindo os espacos por '\3'.
@@ -61,6 +67,8 @@ t_cmd   *lexer_args(char *input, char **envp)
     flag = 1;
     flag2 = 1;
     lx_input = ft_calloc(sizeof(char), (ft_strlen(input) * 3));
+    while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
+        i++;
     while (input[i])
     {
         if (input[i] == ' ' && flag == 1 && flag2 == 1)

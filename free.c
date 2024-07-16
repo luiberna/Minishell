@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:24:26 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/21 17:45:11 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:55:33 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ void    free_cmd(t_cmd *cmd)
 {
     t_cmd *curr;
     
+	if(!cmd)
+		return ;
     curr = cmd;
-    while (curr != NULL)
+    while (cmd != NULL) //Alterei de curr para cmd porque estava a dar segfault - Artur
     {
         curr = cmd;
         cmd = cmd->next;

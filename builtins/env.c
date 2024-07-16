@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ajorge-p <ajorge-p@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/08 17:20:06 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/05 18:44:31 by luiberna         ###   ########.fr       */
+/*   Created: 2024/07/01 16:07:49 by ajorge-p          #+#    #+#             */
+/*   Updated: 2024/07/04 18:49:58 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../Includes/minishell.h"
 
-int	ft_putstr_fd(char *s, int fd)
+void	builtin_env(t_env *env)
 {
-	int		i;
+	int i;
 
 	i = 0;
-	while (s[i])
+	if(!env->envp && !env->envp[0])
+		error_msg("Error on env");
+	while(env->envp[i])
 	{
-		write(fd, &s[i], 1);
+		if(ft_strchr(env->envp[i], '='))
+			printf("%s\n", env->envp[i]);
 		i++;
 	}
-	return (1);
+	exit (0);
 }

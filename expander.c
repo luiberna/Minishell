@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:18:53 by luiberna          #+#    #+#             */
-/*   Updated: 2024/06/25 20:48:33 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/15 19:03:42 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char    *get_end_str(char *str)
     int i;
 
     i = 0;
-    while(str[i] && str[i] != ' ' && str[i] != '\"')
+    while(str[i] && str[i] != ' ' && str[i] != '\"' && str[i] != '\'')
         i++;
     if (str[i])
         return (&str[i]);
@@ -61,7 +61,7 @@ char    *get_env_value(char *str, t_env *env)
 
     i = 0;
     name_len = 0;
-    while (str[i] != ' ' && str[i] && str[i] != '\"')
+    while (str[i] != ' ' && str[i] && str[i] != '\"' && str[i] != '\'')
     {
         name_len++;
         i++;

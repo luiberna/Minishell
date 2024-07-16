@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 18:26:59 by luiberna          #+#    #+#             */
-/*   Updated: 2023/10/09 12:08:24 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:49:48 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		s3[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2 && s2[j])
 	{
 		s3[i + j] = s2[j];
 		j++;
