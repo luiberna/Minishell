@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:33:16 by luiberna          #+#    #+#             */
-/*   Updated: 2024/05/07 22:52:09 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/19 21:01:25 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ t_env *get_env(char **envp)
             return(free_list(env->envp), free(env), NULL);
         i++;
     }
+    env->ex_code = 0;
     return(env);
 }

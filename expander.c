@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:18:53 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/15 19:03:42 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/19 21:01:58 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,11 @@ char    *get_start_str(char *str)
     return (temp_str);
 }
 
+char    *get_ex_code(t_env *env)
+{
+    return (ft_itoa(env->ex_code));
+}
+
 char    *expand(char *str, t_env *env)
 {
     int i;
@@ -113,7 +118,10 @@ char    *expand(char *str, t_env *env)
         if (str[i] == '$')
         {
            start_str = get_start_str(str);
-           env_value = get_env_value(&str[i + 1], env);
+           if (str[i + 1] == '?')
+                env_value = get_ex_code(env);
+           else
+                env_value = get_env_value(&str[i + 1], env);
            end_str = get_end_str(&str[i]);
            temp_str = create_final_str(start_str, env_value, end_str);
            str = temp_str;

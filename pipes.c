@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/09 19:17:33 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:52:25 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ void execve_aux(t_cmd *cmd, t_env *env)
         free(cmd->path);
         cmd->path = ft_strdup(cmd->cmd[0]);
     }
-    // if (execve(cmd->path, cmd->cmd, env->envp) == -1)
-    //     error_msg("Error on execve");
     if (access(cmd->cmd[0], X_OK) != 0 && get_path(cmd->cmd[0], env->envp) == NULL)
         error_msg("Error on execve");
     if (execute(cmd, env) == -1)
@@ -121,12 +119,13 @@ int	is_builtin(char *cmd)
 void pipes_exec(t_cmd *cmd, t_env *env)
 {
     t_cmd *curr;
+    int status;
 
     setup_pipes(cmd);
     curr = cmd;
     while (curr)
     {
-        if(is_builtin(curr->cmd[0])) //Adicionado caso seja builtin - Artur - Atualizei para ser else if
+        if (is_builtin(curr->cmd[0])) //Adicionado caso seja builtin - Artur - Atualizei para ser else if
 			execute(curr, env);
         else if (curr->cmd && curr->cmd[0])
             command_exec(curr, env);
@@ -138,8 +137,10 @@ void pipes_exec(t_cmd *cmd, t_env *env)
     {
         if(is_builtin(curr->cmd[0]))
 			;
-        else if (waitpid(-1, NULL, 0) == -1) //O primeiro -1 define que o wait deve esperar por qualquer child process
+        else if (waitpid(-1, &status, 0) == -1) //O primeiro -1 define que o wait deve esperar por qualquer child process
             error_msg("Error on waitpid");
+        if (WIFEXITED(status))
+            env->ex_code = WEXITSTATUS(status);
         curr = curr->next;
     }
 }

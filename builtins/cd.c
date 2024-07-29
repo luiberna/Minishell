@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:45 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/15 12:15:37 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:13:32 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ int	exec_cd(char *path, t_env *env)
 {
 	save_pwd("OLDPWD", env);
 	if(chdir(path) == 0 && save_pwd("PWD", env))
-		//Update Global Status para 0
-		;
+		env->ex_code = 0;
 	else
 	{
 		if(access(path, F_OK) == -1)
@@ -78,32 +77,35 @@ int	exec_cd(char *path, t_env *env)
 			write(2,"minishell: cd: not a directory\n", 32);
 		write(2, path, ft_strlen(path));
 		write(2, "\n", 1);
-		//Update Global status para 1
+		env->ex_code = 1;
 	}
 	return (1);
 }
 
 // Casos possiveis no CD - "cd" / "cd --" / "cd -" / "cd path"
-
 void	builtin_cd(t_env *env, t_cmd *cmd)
 {
 	char *home_path;
 	if(command_len(cmd->cmd) > 2)
 	{
 		write(2, "Minishell: cd: too many arguments\n", 35);
-		//Update Global status para 1 
+		env->ex_code = 1;
 		return ;
 	}
 	home_path = find_on_env(env->envp, "HOME");
 	home_path = ft_strjoin(home_path, "/");
 	if(!cmd->cmd[1] && exec_cd(home_path, env))
-		//Update Global Status para 0 e Voltar para tras
+	{
+		env->ex_code = 0;
 		return ;
+	}
 	else
 	{
 		if(ft_strcmp(cmd->cmd[1], "--") == 0 && exec_cd(home_path, env))
-			//Update Global Status para 0 e Voltar para tras
+		{
+			env->ex_code = 0;
 			return ;
+		}
 		exec_cd(cmd->cmd[1], env);
 	}
 }

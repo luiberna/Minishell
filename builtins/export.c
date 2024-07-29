@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:53 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/05 18:07:15 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:20:57 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,8 @@ void	export_error(t_cmd *cmd, int i, char **str)
 	write(2, cmd->cmd[i], ft_strlen(cmd->cmd[i]));
 	write(2, "\': not a valid identifier\n", 26);
 	free_dp(str);
-	exit(1);
+	return ;
+	//exit(1);
 	//Atualizar a global variable do status
 }
 
@@ -249,8 +250,12 @@ void	builtin_export(t_env *env, t_cmd *cmd)
 	while(cmd->cmd && cmd->cmd[i])
 	{
 		if(error_handler(cmd->cmd[i]))
+		{
 			export_error(cmd, i, cmd->cmd);
-		export(env, cmd, i);
+			return ;
+		}
+		else
+			export(env, cmd, i);
 		i++;
 	}
 }

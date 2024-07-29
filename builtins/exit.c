@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:55 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/05 19:00:58 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/19 21:18:19 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int		exit_atoi(t_cmd *ms, char *str)
 	}
 	while(str[i])
 	{
-		res = res * 10 + (str[i] + '0');
+		res = res * 10 + (str[i] - '0');
 		if(res > LONG_MAX)
 		{
 			e_status = print_err((s_error){NUM_REQUIRED, str});

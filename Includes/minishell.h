@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/09 19:38:48 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/19 21:00:57 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 typedef struct s_env
 {
     char **envp;
+    int ex_code;
     struct s_env *next;
     struct s_env *prev;
 }               t_env;

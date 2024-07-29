@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/15 19:09:25 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/19 20:41:51 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ void remove_quotes(t_cmd *cmd)
     int k;
     char *new_str;
     char quote;
-
-    i = 0;
+    
     while (cmd)
     {
+        i = 0;
         while (cmd->cmd[i])
         {
             new_str = (char *)malloc(ft_strlen(cmd->cmd[i]) + 1);
+            if (!new_str)
+                return;
             j = 0;
             k = 0;
             while (cmd->cmd[i][j])
@@ -43,13 +45,13 @@ void remove_quotes(t_cmd *cmd)
                     new_str[k++] = cmd->cmd[i][j++];
             }
             new_str[k] = '\0';
-            //free(cmd->cmd[i]);//<---- estava a eliminar o path
-            cmd->cmd[i] = new_str;
+            cmd->cmd[i] = new_str; // Assign the new string
             i++;
         }
-        cmd = cmd->next;
+        cmd = cmd->next; // Move to the next command in the list
     }
 }
+
 
 /*Divide o input por comandos e respetivos argumentos substituindo as pipes ('|') por um caracter inexistente
 '\4' e separando os comandos dos argumentos substituindo os espacos por '\3'.

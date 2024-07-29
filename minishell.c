@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 16:23:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/16 12:17:02 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/22 18:14:15 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int main (int argc, char **argv, char **envp)
             expander(cmd, env);
             remove_quotes(cmd);
             pipes_exec(cmd, env);
-            free(input);
         }
+        free(input);
     }
     return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajorge-p <ajorge-p@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:59 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/04 19:06:45 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/07/19 21:14:12 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,5 @@ void	builtin_echo(char **cmd)
 		i++;
 	}
 	print_echo(cmd, n_flag, i);
-	//Update global Var para 1
+	exit (0);
 }

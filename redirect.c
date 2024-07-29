@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/04 17:08:31 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/19 21:17:31 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void    redirect_in(t_cmd *cmd, int i)
     {
         write(2, "Error: Invalid infile\n", 23);
         close_fds(cmd);
-        exit(1);
+        exit(2);
     }
     dup2(file_in, STDIN_FILENO);
     close(file_in);
@@ -52,7 +52,7 @@ void    redirect_out(t_cmd *cmd, int i)
     {
         write(2, "Error: Invalid outfile\n", 24);
         close_fds(cmd);
-        exit(1);
+        exit(2);
     }
     dup2(file_out, STDOUT_FILENO);
     close(file_out);
@@ -69,7 +69,7 @@ void appending_out(t_cmd *cmd, int i)
     {
         write(2, "Error: Invalid outfile\n", 24);
         close_fds(cmd);
-        exit(1);
+        exit(2);
     }
     dup2(file_out, STDOUT_FILENO);
     close(file_out);
@@ -94,17 +94,6 @@ void here_doc(t_cmd *cmd, int i, int write_fd)
         free(line);
     }
 }
-
-// void check_pipe(t_cmd *cmd, int i, int pipe_fd[2]) <------- Pode dar problemas verificar com VALGRIND
-// {
-//    if (!cmd->cmd[i + 1])
-//     {
-//         close(pipe_fd[0]);
-//         close(pipe_fd[1]);
-//         close_fds(cmd);
-//         error_msg("Error: Reading input failed");
-//     }
-// }
 
 void redirect_here(t_cmd *cmd)
 {
