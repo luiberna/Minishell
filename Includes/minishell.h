@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/19 21:00:57 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/01 17:06:16 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef struct s_env
     char **envp;
     int ex_code;
     struct s_env *next;
-    struct s_env *prev;
 }               t_env;
 
 typedef struct s_cmd
@@ -37,14 +36,13 @@ typedef struct s_cmd
     pid_t pid;
     int nb_cmds;
     struct s_cmd *next;
-    struct s_cmd *prev;
 }               t_cmd;
 
 //builtins
 void	builtin_cd(t_env *env, t_cmd *cmd);
 void	builtin_unset(t_env *env, t_cmd *cmd);
 void	builtin_export(t_env *env, t_cmd *cmd);
-void	builtin_exit(t_cmd *ms, char **cmd);
+void	builtin_exit(t_cmd *ms, char **cmd, t_env *env);
 void	builtin_env(t_env *env);
 void	builtin_pwd(t_cmd *cmd);
 void	builtin_echo(char **cmd);
@@ -64,7 +62,7 @@ void    free_cmd(t_cmd *cmd);
 
 //init
 char	*get_path(char *cmd, char **envp);
-t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp);
+t_cmd   *create_cmd(char *sep_cmd, int i, char **envp);
 t_cmd   *init_cmd(char *input, char **envp);
 
 //parse

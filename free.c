@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:24:26 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/05 18:55:33 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:56:06 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,18 @@ void    free_list(char **list)
 void    free_cmd(t_cmd *cmd)
 {
     t_cmd *curr;
-    
-	if(!cmd)
-		return ;
+
+    if (!cmd)
+        return ;
     curr = cmd;
-    while (cmd != NULL) //Alterei de curr para cmd porque estava a dar segfault - Artur
+    while (cmd && cmd != NULL)
     {
         curr = cmd;
         cmd = cmd->next;
-        free_list(curr->cmd);
-        free(curr->path);
+        if (curr->cmd)
+            free_list(curr->cmd);
+        if (curr->path && curr->path != curr->cmd[0]) //Make sure not to double free
+            free(curr->path);
         if (curr->fd[0] != -1)
             close(curr->fd[0]);
         if (curr->fd[1] != -1)

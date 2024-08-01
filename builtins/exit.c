@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:55 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/19 21:18:19 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/29 19:50:42 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int		exit_atoi(t_cmd *ms, char *str)
 	return((res * sign) % 256);
 }
 
-void	builtin_exit(t_cmd *ms, char **cmd)
+void	builtin_exit(t_cmd *ms, char **cmd, t_env *env)
 {
 	int e_status;
 
@@ -118,5 +118,8 @@ void	builtin_exit(t_cmd *ms, char **cmd)
 			e_status = exit_atoi(ms, cmd[1]);
 	}
 	free_cmd(ms);
+	free_list(env->envp);
+    free(env);
+	write(1, "exit\n", 6);
 	exit(e_status);
 }

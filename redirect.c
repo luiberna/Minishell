@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/19 21:17:31 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:54:50 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,31 +95,45 @@ void here_doc(t_cmd *cmd, int i, int write_fd)
     }
 }
 
+int     check_here(t_cmd *cmd)
+{
+    int i;
+
+    i = 0;
+    while (cmd->cmd[i])
+    {
+        if (strncmp(cmd->cmd[i], "<<", 2) == 0)
+            return (1);
+        else
+            i++;
+    }
+    return (0);
+}
+
 void redirect_here(t_cmd *cmd)
 {
     int i;
     int pipe_fd[2];
     
     i = 0;
-    if (pipe(pipe_fd) == -1)
+    if (check_here(cmd))
     {
-        perror("Pipe creation failed");
-        exit(1);
-    }
-    while (cmd->cmd[i])
-    {
-        if (strncmp(cmd->cmd[i], "<<", 2) == 0)
+        if (pipe(pipe_fd) == -1)
+            error_msg("Pipe creation failed");
+        while (cmd->cmd[i])
         {
-            //check_pipe(cmd, i, &pipe_fd[2]); <------- Pode dar problemas verificar com VALGRIND
-            here_doc(cmd, i, pipe_fd[1]);
-            remove_redirection(cmd, i);
+            if (strncmp(cmd->cmd[i], "<<", 2) == 0)
+            {
+                here_doc(cmd, i, pipe_fd[1]);
+                remove_redirection(cmd, i);
+            }
+            else
+                i++;
         }
-        else
-            i++;
+        close(pipe_fd[1]); // Fecha a write da pipe
+        dup2(pipe_fd[0], STDIN_FILENO); // Redirect da read da pipe para o STDIN
+        close(pipe_fd[0]); // Fecha a read da pipe
     }
-    close(pipe_fd[1]); // Fecha a write da pipe
-    dup2(pipe_fd[0], STDIN_FILENO); // Redirect da read da pipe para o STDIN
-    close(pipe_fd[0]); // Fecha a read da pipe
 }
 
 void    redirections(t_cmd *cmd)

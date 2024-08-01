@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/19 20:41:51 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:53:38 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ void remove_quotes(t_cmd *cmd)
                     new_str[k++] = cmd->cmd[i][j++];
             }
             new_str[k] = '\0';
+            free(cmd->cmd[i]);
             cmd->cmd[i] = new_str; // Assign the new string
             i++;
         }
         cmd = cmd->next; // Move to the next command in the list
     }
 }
-
 
 /*Divide o input por comandos e respetivos argumentos substituindo as pipes ('|') por um caracter inexistente
 '\4' e separando os comandos dos argumentos substituindo os espacos por '\3'.
@@ -68,7 +68,7 @@ t_cmd   *lexer_args(char *input, char **envp)
     j = 0;
     flag = 1;
     flag2 = 1;
-    lx_input = ft_calloc(sizeof(char), (ft_strlen(input) * 3));
+    lx_input = ft_calloc((ft_strlen(input) * 3), sizeof(char));
     while (input[i] == ' ' || (input[i] >= 9 && input[i] <= 13))
         i++;
     while (input[i])

@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 18:04:07 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/05 18:41:54 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:46:58 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int    execute(t_cmd *cmd, t_env *env)
     else if (ft_strncmp(cmd->cmd[0], "env", 4) == 0)
         builtin_env(env);
     else if (ft_strncmp(cmd->cmd[0], "exit", 5) == 0)
-        builtin_exit(cmd, cmd->cmd);
+        builtin_exit(cmd, cmd->cmd, env);
     else
         return (execve(cmd->path, cmd->cmd, env->envp));
 	return (1);

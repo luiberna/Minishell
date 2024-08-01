@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/22 15:52:25 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:59:20 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ void close_fds(t_cmd *cmd)
             close(curr->fd[1]);
         curr = curr->next;
     }
-    while (nb > 3)/*Nao estava a conseguir fechar
-    todos os fds entao arranjei esta forma rudimentar*/
+    while (nb > 2)
     {
         close(nb);
         nb--;

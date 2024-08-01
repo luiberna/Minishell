@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/09 19:22:42 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:51:59 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*get_path(char *cmd, char **envp)
 /*Cria uma node (cmd) com toda a informacao necessaria para o comando.
 O pipe (fd) pode ser inicializado com valores 0 e 1 pois vao ser alterados mais tarde.
 O PID pode ser inicializado com valor 0 pois vai ser alterado quando utilizarmos a fork()*/
-t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
+t_cmd   *create_cmd(char *sep_cmd, int i, char **envp)
 {
     t_cmd *cmd;
     int j;
@@ -54,15 +54,11 @@ t_cmd   *create_cmd(char *sep_cmd, t_cmd *prev_cmd, int i, char **envp)
     while (cmd->cmd[j] && (cmd->path = get_path(cmd->cmd[j], envp)) == NULL)
         j++;
     if (ft_strncmp(cmd->cmd[0], "./", 2) == 0)
-        cmd->path = cmd->cmd[0];
+        cmd->path = ft_strdup(cmd->cmd[0]);
     cmd->nb_cmds = i + 1;
-    if (cmd->nb_cmds == 1)
-        cmd->prev = NULL;
-    else
-        cmd->prev = prev_cmd;
     cmd->next = NULL;
-    cmd->fd[0] = 0;
-    cmd->fd[1] = 1;
+    cmd->fd[0] = -1;
+    cmd->fd[1] = -1;
     cmd->pid = 0;
     return(cmd);
 }
@@ -110,14 +106,15 @@ t_cmd    *init_cmd(char *input, char **envp)
     else
     {
         sep_cmd = ft_split(input, '\4');
-        fst_cmd = create_cmd(sep_cmd[0], NULL, 0, envp);
+        fst_cmd = create_cmd(sep_cmd[0], 0, envp);
         curr_cmd = fst_cmd;
         while(sep_cmd[i])
         {
-            curr_cmd->next = create_cmd(sep_cmd[i], curr_cmd, i, envp);
+            curr_cmd->next = create_cmd(sep_cmd[i], i, envp);
             curr_cmd = curr_cmd->next;
             i++;
         }
     }
-    return(fst_cmd);
+    free(input);
+    return(free_list(sep_cmd), fst_cmd);
 }
