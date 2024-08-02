@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:53 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/22 17:20:57 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/01 20:41:18 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,21 +72,21 @@ void	print_env(t_cmd *cmd, t_env *env)
 	sort_env(env->envp, size_of_env(env->envp));
 	while(env->envp[i])
 	{
-		write(cmd->fd[1], "declare -x ", 12);
+		write(1, "declare -x ", 12);
 		j = -1;
 		first_equal = 1;
 		while(env->envp[i][++j])
 		{
-			write(cmd->fd[1], &env->envp[i][j], 1);
+			write(1, &env->envp[i][j], 1);
 			if(env->envp[i][j] == '=' && first_equal)
 			{
-				write(cmd->fd[1], "\"", 2);
+				write(1, "\"", 2);
 				first_equal = 0;
 			}
 		}
 		if(ft_strchr(env->envp[i], '='))
-			write(cmd->fd[1], "\"", 2);
-		write(cmd->fd[1], "\n", 2);
+			write(1, "\"", 2);
+		write(1, "\n", 2);
 		i++;
 	}
 }
@@ -194,7 +194,6 @@ void var_exists(char *var, char *value, t_env *env)
 	}
 	duplicate_env(env, size, new_var);
 }
-
 
 void export(t_env *env, t_cmd *cmd, int i)
 {

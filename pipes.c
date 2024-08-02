@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/01 16:59:20 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/02 18:06:37 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,17 @@ void close_fds(t_cmd *cmd)
     }
 }
 
-void error_msg(char *str)
+void error_msg(char *str, int ex_nb)
 {
     perror(str);
-    exit(1);
+    exit(ex_nb);
 }
 
 void execve_aux(t_cmd *cmd, t_env *env)
 {
+    char *path;
+
+    path = get_path(cmd->cmd[0], env->envp);
     if (!cmd->cmd || !cmd->cmd[0])
         free(cmd->path);
     if (cmd->cmd[0][0] == '/' && (access(cmd->cmd[0], F_OK) == 0))
@@ -49,10 +52,17 @@ void execve_aux(t_cmd *cmd, t_env *env)
         free(cmd->path);
         cmd->path = ft_strdup(cmd->cmd[0]);
     }
-    if (access(cmd->cmd[0], X_OK) != 0 && get_path(cmd->cmd[0], env->envp) == NULL)
-        error_msg("Error on execve");
+    if (access(cmd->cmd[0], X_OK) != 0 && path == NULL)
+    {
+        free(path);
+        error_msg("Error on execve", 127);
+    }
     if (execute(cmd, env) == -1)
-        error_msg("Error on execve");
+    {
+        free(path);
+        error_msg("Error on execve", 127);
+    }
+    free(path);
     exit(1);
 }
 
@@ -80,7 +90,7 @@ void command_exec(t_cmd *cmd, t_env *env)
         exit(0);
     }
     else if (pid < 0)
-        error_msg("Erro on fork");
+        error_msg("Erro on fork", 1);
 }
 
 void    setup_pipes(t_cmd *cmd)
@@ -94,7 +104,7 @@ void    setup_pipes(t_cmd *cmd)
         if (curr->next)
         {
             if (pipe(pipe_fd) == -1)
-                error_msg("Error on pipe");
+                error_msg("Error on pipe", 1);
             curr->fd[1] = pipe_fd[1];
             curr->next->fd[0] = pipe_fd[0];
         }
@@ -137,7 +147,7 @@ void pipes_exec(t_cmd *cmd, t_env *env)
         if(is_builtin(curr->cmd[0]))
 			;
         else if (waitpid(-1, &status, 0) == -1) //O primeiro -1 define que o wait deve esperar por qualquer child process
-            error_msg("Error on waitpid");
+            error_msg("Error on waitpid", 1);
         if (WIFEXITED(status))
             env->ex_code = WEXITSTATUS(status);
         curr = curr->next;

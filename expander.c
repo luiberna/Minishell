@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:18:53 by luiberna          #+#    #+#             */
-/*   Updated: 2024/07/19 21:01:58 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/02 18:21:25 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ char    *expand(char *str, t_env *env)
         }
         i++;
     }
-    return (str); 
+    return (free(start_str), str);
 }
 
 void    expander(t_cmd *cmd, t_env *env)
@@ -153,6 +153,7 @@ void    expander(t_cmd *cmd, t_env *env)
                     expanded_str = expand(cmd->cmd[i], env);
                     free(cmd->cmd[i]);
                     cmd->cmd[i] = ft_strdup(expanded_str);
+                    free(expanded_str);
                 }
             }
             i++;

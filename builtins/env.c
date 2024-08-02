@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajorge-p <ajorge-p@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:49 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/04 18:49:58 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/08/02 16:49:45 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	builtin_env(t_env *env)
 
 	i = 0;
 	if(!env->envp && !env->envp[0])
-		error_msg("Error on env");
+		error_msg("Error on env", 1);
 	while(env->envp[i])
 	{
 		if(ft_strchr(env->envp[i], '='))

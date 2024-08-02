@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/01 17:06:16 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/02 17:07:49 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ typedef struct s_cmd
     struct s_cmd *next;
 }               t_cmd;
 
+//signals
+void	signals_default(void);
+
 //builtins
+void    var_exists(char *var, char *value, t_env *env);
 void	builtin_cd(t_env *env, t_cmd *cmd);
 void	builtin_unset(t_env *env, t_cmd *cmd);
 void	builtin_export(t_env *env, t_cmd *cmd);
@@ -63,15 +67,15 @@ void    free_cmd(t_cmd *cmd);
 //init
 char	*get_path(char *cmd, char **envp);
 t_cmd   *create_cmd(char *sep_cmd, int i, char **envp);
-t_cmd   *init_cmd(char *input, char **envp);
+t_cmd   *init_cmd(char *input, t_env *env);
 
 //parse
 void    remove_quotes(t_cmd *cmd); //<------Novo
-t_cmd   *lexer_args(char *input, char **envp);
+t_cmd   *lexer_args(char *input, t_env *env);
 
 //pipes
 void	close_fds(t_cmd *cmd);
-void	error_msg(char *str);
+void	error_msg(char *str, int ex_nb);
 void    execve_aux(t_cmd *cmd, t_env *env);
 void    command_exec(t_cmd *cmd, t_env *env);
 void    pipes_exec(t_cmd *cmd, t_env *env);
@@ -87,9 +91,9 @@ void    redirect_here(t_cmd *cmd);
 void    redirections(t_cmd *cmd);
 
 //Utils
-int	ft_strcmp(char *s1, char *s2);
-int find_eq(char *str);
+int     ft_strcmp(char *s1, char *s2);
+int     find_eq(char *str);
 void	export_error(t_cmd *cmd, int i, char **str);
-int	error_handler(char *cmd);
+int     error_handler(char *cmd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/01 18:51:59 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/02 18:25:47 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ char	*get_path(char *cmd, char **envp)
 	char	**paths;
 
 	i = 0;
-	while (envp[0] && ft_strnstr(envp[i], "PATH=", 5) == 0)
+	while (envp[0] && envp[i] && ft_strnstr(envp[i], "PATH=", 5) == 0)
 		i++;
+    if (!envp[i])
+        return(NULL);
 	paths = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (paths[i])
@@ -63,7 +65,7 @@ t_cmd   *create_cmd(char *sep_cmd, int i, char **envp)
     return(cmd);
 }
 /*Para verificar alguns erros como "ls |   | pwd" ou "   | pwd"*/
-int check_input(char *input)
+int check_input(char *input, t_env *env)
 {
     int i;
     int prev_pipe;
@@ -77,7 +79,7 @@ int check_input(char *input)
         if (input[i] == '\4')
         {
             if (prev_pipe)
-                return (write(2, "syntax error near unexpected token '|'\n", 40), 0);
+                return (env->ex_code = 2, write(2, "syntax error near unexpected token '|'\n", 40), 0);
             prev_pipe = 1;
         }
         else if (input[i] != '\0')
@@ -85,13 +87,13 @@ int check_input(char *input)
         i++;
     }
     if (prev_pipe)
-        return (write(2, "syntax error near unexpected token 'newline'\n", 46), 0);
+        return (env->ex_code = 2, write(2, "syntax error near unexpected token 'newline'\n", 46), 0);
     return 1;
 }
 
 /*Inicializa a double linked list (struct t_cmd) criando todas as nodes com a informacao
 necessaria a cada comando*/
-t_cmd    *init_cmd(char *input, char **envp)
+t_cmd    *init_cmd(char *input, t_env *env)
 {
     t_cmd *fst_cmd;
     t_cmd *curr_cmd;
@@ -101,16 +103,16 @@ t_cmd    *init_cmd(char *input, char **envp)
     i = 1;
     if (input[0] == '\0')
         return (NULL);
-    if (check_input(input) == 0)
-        return(NULL);
+    if (check_input(input, env) == 0)
+        return(free(input), NULL);
     else
     {
         sep_cmd = ft_split(input, '\4');
-        fst_cmd = create_cmd(sep_cmd[0], 0, envp);
+        fst_cmd = create_cmd(sep_cmd[0], 0, env->envp);
         curr_cmd = fst_cmd;
         while(sep_cmd[i])
         {
-            curr_cmd->next = create_cmd(sep_cmd[i], i, envp);
+            curr_cmd->next = create_cmd(sep_cmd[i], i, env->envp);
             curr_cmd = curr_cmd->next;
             i++;
         }

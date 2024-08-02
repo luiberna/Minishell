@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/01 18:53:38 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/02 18:27:38 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,17 @@ void remove_quotes(t_cmd *cmd)
             }
             new_str[k] = '\0';
             free(cmd->cmd[i]);
-            cmd->cmd[i] = new_str; // Assign the new string
+            cmd->cmd[i] = new_str;
             i++;
         }
-        cmd = cmd->next; // Move to the next command in the list
+        cmd = cmd->next;
     }
 }
 
 /*Divide o input por comandos e respetivos argumentos substituindo as pipes ('|') por um caracter inexistente
 '\4' e separando os comandos dos argumentos substituindo os espacos por '\3'.
 Adiciona um espaco entre as redirects da seguinte forma: (\3>>\3) de forma a albergar todos os casos.*/
-t_cmd   *lexer_args(char *input, char **envp)
+t_cmd   *lexer_args(char *input, t_env *env)
 {
     int flag;
     int flag2;
@@ -107,5 +107,5 @@ t_cmd   *lexer_args(char *input, char **envp)
         i++;
     }
     lx_input[j] = '\0';
-    return (init_cmd(lx_input, envp));
+    return (init_cmd(lx_input, env));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajorge-p <ajorge-p@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:57 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/04 18:49:11 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/08/02 16:49:54 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,5 @@ void	builtin_pwd(t_cmd *cmd)
 		exit(0);
 	}	
 	else
-		error_msg("Error getting current directory");
+		error_msg("Error getting current directory", 1);
 }

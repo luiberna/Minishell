@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/01 16:54:50 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/02 17:05:33 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void    redirect_in(t_cmd *cmd, int i)
     int file_in;
 
     if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
-        error_msg("Parse error near '<'");
+        error_msg("Parse error near '<'", 2);
     file_in = open(cmd->cmd[i + 1], O_RDONLY, 0777);
     if (file_in == -1)
     {
@@ -46,7 +46,7 @@ void    redirect_out(t_cmd *cmd, int i)
     int file_out;
     
     if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
-        error_msg("Parse error near '>'");
+        error_msg("Parse error near '>'", 2);
     file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
     if (file_out == -1)
     {
@@ -63,7 +63,7 @@ void appending_out(t_cmd *cmd, int i)
     int file_out;
 
     if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
-        error_msg("Parse error near '>>'");
+        error_msg("Parse error near '>>'", 2);
     file_out = open(cmd->cmd[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
     if (file_out == -1)
     {
@@ -80,9 +80,10 @@ void here_doc(t_cmd *cmd, int i, int write_fd)
     char *line;
 
     if (!cmd->cmd[i + 1] || ft_strncmp(cmd->cmd[i + 1], ">", 1) == 0 || ft_strncmp(cmd->cmd[i + 1], "<", 1) == 0)
-        error_msg("Parse error near '<<'");
+        error_msg("Parse error near '<<'", 2);
     while (1)
     {
+        signals_default();
         line = readline("> ");
         if (line == NULL || strcmp(line, cmd->cmd[i + 1]) == 0)
         {
@@ -119,7 +120,7 @@ void redirect_here(t_cmd *cmd)
     if (check_here(cmd))
     {
         if (pipe(pipe_fd) == -1)
-            error_msg("Pipe creation failed");
+            error_msg("Pipe creation failed", 1);
         while (cmd->cmd[i])
         {
             if (strncmp(cmd->cmd[i], "<<", 2) == 0)
