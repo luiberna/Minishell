@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:18:53 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/02 18:21:25 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/05 18:52:09 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,16 @@ char    *create_final_str(char *start_str, char *env_value, char *end_str)
 char    *get_end_str(char *str)
 {
     int i;
+    char *end_str;
 
     i = 0;
     while(str[i] && str[i] != ' ' && str[i] != '\"' && str[i] != '\'')
         i++;
     if (str[i])
-        return (&str[i]);
+    {
+        end_str = ft_strdup(&str[i]);
+        return (end_str);
+    }
     else
         return (NULL);
 }
@@ -58,6 +62,7 @@ char    *get_env_value(char *str, t_env *env)
 {
     int i;
     int name_len;
+    char *env_value;
 
     i = 0;
     name_len = 0;
@@ -70,7 +75,7 @@ char    *get_env_value(char *str, t_env *env)
     while (env->envp[i])
     {
         if (ft_strncmp(str, env->envp[i], name_len) == 0 && env->envp[i][name_len] == '=')
-            return (&env->envp[i][name_len + 1]);
+            return (env_value = ft_strdup(&env->envp[i][name_len + 1]), env_value);
         i++;
     }
     return (NULL);
@@ -104,6 +109,14 @@ char    *get_ex_code(t_env *env)
     return (ft_itoa(env->ex_code));
 }
 
+void free_lines(char *str, char *end_str, char *env_value, char *start_str)
+{
+    free(str);
+    free(end_str);
+    free(env_value);
+    free(start_str);
+}
+
 char    *expand(char *str, t_env *env)
 {
     int i;
@@ -112,8 +125,8 @@ char    *expand(char *str, t_env *env)
     char *end_str;
     char *temp_str;
 
-    i = 0;
-    while (str[i])
+    i = -1;
+    while (str[++i])
     {
         if (str[i] == '$')
         {
@@ -124,12 +137,20 @@ char    *expand(char *str, t_env *env)
                 env_value = get_env_value(&str[i + 1], env);
            end_str = get_end_str(&str[i]);
            temp_str = create_final_str(start_str, env_value, end_str);
-           str = temp_str;
+           free_lines(str, end_str, env_value, start_str);
+           str = ft_strdup(temp_str);
+           free(temp_str);
            i = 0;
         }
-        i++;
     }
-    return (free(start_str), str);
+    return (str);
+}
+
+int verify_next_char(char a)
+{
+    if (a && ft_isalnum(a) || a == '?')
+        return (1);
+    return (0);
 }
 
 void    expander(t_cmd *cmd, t_env *env)
@@ -148,10 +169,9 @@ void    expander(t_cmd *cmd, t_env *env)
             {
                 if (cmd->cmd[i][0] == '\'')
                     break;
-                if (cmd->cmd[i][j] == '$')
+                if (cmd->cmd[i][j] == '$' && verify_next_char(cmd->cmd[i][j + 1]))
                 {
                     expanded_str = expand(cmd->cmd[i], env);
-                    free(cmd->cmd[i]);
                     cmd->cmd[i] = ft_strdup(expanded_str);
                     free(expanded_str);
                 }

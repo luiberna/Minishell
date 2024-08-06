@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:53 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/01 20:41:18 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/05 14:36:18 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,28 +91,13 @@ void	print_env(t_cmd *cmd, t_env *env)
 	}
 }
 
-void	free_dp(char **var)
-{
-	int i;
-
-	i = 0;
-	while(var[i])
-	{
-		free(var[i]);
-		i++;
-	}
-	free(var);
-}
-
-void	export_error(t_cmd *cmd, int i, char **str)
+void	export_error(t_cmd *cmd, int i, char **str, t_env *env)
 {
 	write(2, "minishell: export: \'", 21);
 	write(2, cmd->cmd[i], ft_strlen(cmd->cmd[i]));
 	write(2, "\': not a valid identifier\n", 26);
-	free_dp(str);
+	env->ex_code = 1;
 	return ;
-	//exit(1);
-	//Atualizar a global variable do status
 }
 
 int find_eq(char *str)
@@ -216,7 +201,7 @@ void export(t_env *env, t_cmd *cmd, int i)
 	}
 	free(var);
 }
-//Search until Equal
+
 int sue(char *str, char c)
 {
 	int i;
@@ -250,7 +235,7 @@ void	builtin_export(t_env *env, t_cmd *cmd)
 	{
 		if(error_handler(cmd->cmd[i]))
 		{
-			export_error(cmd, i, cmd->cmd);
+			export_error(cmd, i, cmd->cmd, env);
 			return ;
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:55 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/29 19:50:42 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/06 16:56:40 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		ft_isnumber(char *str)
 	i = 0;
 	while(str[i])
 	{
-		if(!ft_isdigit(str[i]))
+		if(!ft_isdigit(str[i]) && str[i] != '+' && str[i] != '-')
 			return (0);
 		i++;
 	}
@@ -109,10 +109,17 @@ void	builtin_exit(t_cmd *ms, char **cmd, t_env *env)
 	e_status = 0;
 	if(cmd[0])
 	{
-		if(cmd[1] && !ft_isnumber(cmd[1]))
+		if (cmd[1] && cmd[2])
+		{
+			printf("%s\n", cmd[2]);
+			write(2, "Minishell: exit: Too many arguments\n", 37);
+			env->ex_code = 1;
+			return ;
+		}
+		else if(cmd[1] && !ft_isnumber(cmd[1]))
 		{
 			e_status = print_err((s_error){TOO_MANY_ARGS, cmd[1]});
-			(free_cmd(ms), exit(e_status));
+			(free_cmd(ms), exit(2));
 		}
 		else if(cmd[1])
 			e_status = exit_atoi(ms, cmd[1]);

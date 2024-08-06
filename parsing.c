@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:35:24 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/02 18:27:38 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/05 18:08:02 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void remove_quotes(t_cmd *cmd)
             }
             new_str[k] = '\0';
             free(cmd->cmd[i]);
-            cmd->cmd[i] = new_str;
+            cmd->cmd[i] = ft_strdup(new_str);
+            free(new_str);
             i++;
         }
         cmd = cmd->next;

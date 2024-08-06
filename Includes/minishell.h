@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/02 17:07:49 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:41:54 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void    redirections(t_cmd *cmd);
 //Utils
 int     ft_strcmp(char *s1, char *s2);
 int     find_eq(char *str);
-void	export_error(t_cmd *cmd, int i, char **str);
+void	export_error(t_cmd *cmd, int i, char **str, t_env *env);
 int     error_handler(char *cmd);
 
 #endif

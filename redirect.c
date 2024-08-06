@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/02 17:05:33 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/06 17:04:07 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void    redirect_in(t_cmd *cmd, int i)
     {
         write(2, "Error: Invalid infile\n", 23);
         close_fds(cmd);
-        exit(2);
+        exit(1);
     }
     dup2(file_in, STDIN_FILENO);
     close(file_in);
@@ -52,7 +52,7 @@ void    redirect_out(t_cmd *cmd, int i)
     {
         write(2, "Error: Invalid outfile\n", 24);
         close_fds(cmd);
-        exit(2);
+        exit(1);
     }
     dup2(file_out, STDOUT_FILENO);
     close(file_out);
@@ -69,7 +69,7 @@ void appending_out(t_cmd *cmd, int i)
     {
         write(2, "Error: Invalid outfile\n", 24);
         close_fds(cmd);
-        exit(2);
+        exit(1);
     }
     dup2(file_out, STDOUT_FILENO);
     close(file_out);
@@ -154,7 +154,7 @@ void    redirections(t_cmd *cmd)
             appending_out(cmd, i);
             remove_redirection(cmd, i);
         }
-        else if (ft_strncmp(cmd->cmd[i], ">", 1) == 0)
+        else if (ft_strncmp(cmd->cmd[i], ">", 2) == 0)
         {
             redirect_out(cmd, i);
             remove_redirection(cmd, i);

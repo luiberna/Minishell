@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:45 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/07/22 17:13:32 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/05 17:56:58 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int save_pwd(char *var_to_update, t_env *env)
 	char var[PATH_MAX];
 	int i;
 	char *tmp;
+	char *tmp2;
 
 	i = 0;
 	if(getcwd(var, sizeof(var)))
@@ -53,10 +54,11 @@ int save_pwd(char *var_to_update, t_env *env)
 			i++;
 		if(env->envp[i])
 			free(env->envp[i]);
-		env->envp[i] = ft_strdup(var_to_update);
-		tmp = ft_strjoin("=", var);
-		env->envp[i] = ft_strjoin(env->envp[i], tmp);
+		tmp = ft_strdup(var_to_update);
+		tmp2 = ft_strjoin("=", var);
+		env->envp[i] = ft_strjoin(tmp, tmp2);
 		free (tmp);
+		free (tmp2);
 	}	
 	return (1);
 }
@@ -75,8 +77,6 @@ int	exec_cd(char *path, t_env *env)
 			write(2, "minishell: cd: Permission denied\n", 34);
 		else
 			write(2,"minishell: cd: not a directory\n", 32);
-		write(2, path, ft_strlen(path));
-		write(2, "\n", 1);
 		env->ex_code = 1;
 	}
 	return (1);
@@ -86,17 +86,21 @@ int	exec_cd(char *path, t_env *env)
 void	builtin_cd(t_env *env, t_cmd *cmd)
 {
 	char *home_path;
+	char *tmp;
+	
 	if(command_len(cmd->cmd) > 2)
 	{
 		write(2, "Minishell: cd: too many arguments\n", 35);
 		env->ex_code = 1;
 		return ;
 	}
-	home_path = find_on_env(env->envp, "HOME");
-	home_path = ft_strjoin(home_path, "/");
+	tmp = find_on_env(env->envp, "HOME");
+	home_path = ft_strjoin(tmp, "/");
+	free(tmp);
 	if(!cmd->cmd[1] && exec_cd(home_path, env))
 	{
 		env->ex_code = 0;
+		free(home_path);
 		return ;
 	}
 	else
@@ -104,8 +108,10 @@ void	builtin_cd(t_env *env, t_cmd *cmd)
 		if(ft_strcmp(cmd->cmd[1], "--") == 0 && exec_cd(home_path, env))
 		{
 			env->ex_code = 0;
+			free(home_path);
 			return ;
 		}
 		exec_cd(cmd->cmd[1], env);
+		free(home_path);
 	}
 }
