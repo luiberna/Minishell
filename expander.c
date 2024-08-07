@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:18:53 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/05 18:52:09 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/07 15:26:01 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ char    *get_end_str(char *str)
     char *end_str;
 
     i = 0;
+    if (str[i + 1] == '?')
+    {
+        end_str = ft_strdup(&str[i + 2]);
+        return (end_str);
+    }
     while(str[i] && str[i] != ' ' && str[i] != '\"' && str[i] != '\'')
         i++;
     if (str[i])
@@ -153,6 +158,33 @@ int verify_next_char(char a)
     return (0);
 }
 
+void remove_null_strings(char **cmd)
+{
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    while (cmd[i] != NULL)
+    {
+        if (cmd[i][0] != '\0')
+        {
+            if (i != j)
+                cmd[j] = cmd[i];
+            j++;
+        } 
+        else
+            free(cmd[i]);
+        i++;
+    }
+    cmd[j] = NULL;
+    if (j == 0)
+    {
+        cmd[0] = ft_strdup("");
+        cmd[1] = NULL;
+    }
+}
+
 void    expander(t_cmd *cmd, t_env *env)
 {
     int i;
@@ -161,8 +193,8 @@ void    expander(t_cmd *cmd, t_env *env)
 
     while (cmd)
     {
-        i = 0;
-        while (cmd->cmd[i])
+        i = -1;
+        while (cmd->cmd[++i])
         {
             j = -1;
             while (cmd->cmd[i][++j])
@@ -176,8 +208,8 @@ void    expander(t_cmd *cmd, t_env *env)
                     free(expanded_str);
                 }
             }
-            i++;
         }
+        remove_null_strings(cmd->cmd);
         cmd = cmd->next;
     }
 }

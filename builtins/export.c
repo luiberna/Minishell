@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:53 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/05 14:36:18 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/07 20:22:58 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	sort_env(char **env, int size)
 	
 }
 
-void	print_env(t_cmd *cmd, t_env *env)
+void	print_env2(t_cmd *cmd, t_env *env)
 {
 	int	i;
 	int j;
@@ -87,6 +87,35 @@ void	print_env(t_cmd *cmd, t_env *env)
 		if(ft_strchr(env->envp[i], '='))
 			write(1, "\"", 2);
 		write(1, "\n", 2);
+		i++;
+	}
+}
+
+void	print_env(t_cmd *cmd, t_env *env)
+{
+	int	i;
+	int j;
+	int first_equal;
+	
+	i = 0;
+	sort_env(env->envp, size_of_env(env->envp));
+	while(env->envp[i])
+	{
+		write(cmd->fd[1], "declare -x ", 12);
+		j = -1;
+		first_equal = 1;
+		while(env->envp[i][++j])
+		{
+			write(cmd->fd[1], &env->envp[i][j], 1);
+			if(env->envp[i][j] == '=' && first_equal)
+			{
+				write(cmd->fd[1], "\"", 2);
+				first_equal = 0;
+			}
+		}
+		if(ft_strchr(env->envp[i], '='))
+			write(cmd->fd[1], "\"", 2);
+		write(cmd->fd[1], "\n", 2);
 		i++;
 	}
 }
@@ -228,8 +257,10 @@ void	builtin_export(t_env *env, t_cmd *cmd)
 {
 	int i;
 
-	if(!cmd->cmd[1])
+	if(!cmd->cmd[1] && cmd->next)
 		print_env(cmd, env);
+	else if(!cmd->cmd[1] && !cmd->next)
+		print_env2(cmd, env);
 	i = 1;
 	while(cmd->cmd && cmd->cmd[i])
 	{

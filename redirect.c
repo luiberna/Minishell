@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/06 17:04:07 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/07 15:37:08 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ void here_doc(t_cmd *cmd, int i, int write_fd)
         error_msg("Parse error near '<<'", 2);
     while (1)
     {
-        signals_default();
         line = readline("> ");
         if (line == NULL || strcmp(line, cmd->cmd[i + 1]) == 0)
         {

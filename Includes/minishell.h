@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/05 12:41:54 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/07 20:20:19 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_cmd
 }               t_cmd;
 
 //signals
-void	signals_default(void);
+void	signals_default(t_env *env);
 
 //builtins
 void    var_exists(char *var, char *value, t_env *env);
