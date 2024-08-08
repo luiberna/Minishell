@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:53 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/07 20:22:58 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:43:36 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void	print_env2(t_cmd *cmd, t_env *env)
 	int	i;
 	int j;
 	int first_equal;
+	
 	i = 0;
-
 	sort_env(env->envp, size_of_env(env->envp));
 	while(env->envp[i])
 	{
