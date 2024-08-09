@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/09 01:33:22 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:14:13 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 typedef struct s_env
 {
     char **envp;
-    int ex_code;
     struct s_env *next;
 }               t_env;
 
@@ -54,8 +53,13 @@ typedef struct s_error
 	char *msg;
 }       t_error;
 
+extern int g_ex_code;
+
 //signals
-void	signals_default(void);
+void	signals_default(t_env *env);
+void	signals_default_child(void);
+void	handle_sign(int sign);
+void	handle_quit(int sign);
 
 //builtins
 void    var_exists(char *var, char *value, t_env *env);

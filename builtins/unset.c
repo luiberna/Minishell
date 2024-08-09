@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:51 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/06 14:59:32 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:15:50 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	builtin_unset(t_env *env, t_cmd *cmd)
 
 	if(!cmd->cmd[1])
 	{
-		env->ex_code = 0;
+		g_ex_code = 0;
 		return ;
 	}
 	else
@@ -70,7 +70,7 @@ void	builtin_unset(t_env *env, t_cmd *cmd)
 		{
 			if(error_handler(cmd->cmd[i]))
 			{
-				env->ex_code = 1;
+				g_ex_code = 1;
 				return ;
 			}
 			unset(env, cmd->cmd[i]);

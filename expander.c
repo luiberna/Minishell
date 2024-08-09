@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:18:53 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/09 15:40:01 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:14:36 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ char    *get_start_str(char *str)
 
 char    *get_ex_code(t_env *env)
 {
-    return (ft_itoa(env->ex_code));
+    return (ft_itoa(g_ex_code));
 }
 
 void free_lines(char *str, char *end_str, char *env_value, char *start_str)

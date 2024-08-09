@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:53 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/09 01:15:48 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:15:40 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	export_error(t_cmd *cmd, int i, char **str, t_env *env)
 	write(2, "minishell: export: \'", 21);
 	write(2, cmd->cmd[i], ft_strlen(cmd->cmd[i]));
 	write(2, "\': not a valid identifier\n", 26);
-	env->ex_code = 1;
+	g_ex_code = 1;
 	return ;
 }
 

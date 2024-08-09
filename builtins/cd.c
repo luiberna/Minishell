@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:45 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/08 16:21:20 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:22:07 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	exec_cd(char *path, t_env *env)
 {
 	save_pwd("OLDPWD", env);
 	if(chdir(path) == 0 && save_pwd("PWD", env))
-		env->ex_code = 0;
+		g_ex_code = 0;
 	else
 	{
 		if(access(path, F_OK) == -1)
@@ -77,12 +77,11 @@ int	exec_cd(char *path, t_env *env)
 			write(2, "minishell: cd: Permission denied\n", 34);
 		else
 			write(2,"minishell: cd: not a directory\n", 32);
-		env->ex_code = 1;
+		g_ex_code = 1;
 	}
 	return (1);
 }
 
-// Casos possiveis no CD - "cd" / "cd --" / "cd -" / "cd path"
 void	builtin_cd(t_env *env, t_cmd *cmd)
 {
 	char *home_path;
@@ -91,7 +90,7 @@ void	builtin_cd(t_env *env, t_cmd *cmd)
 	if(command_len(cmd->cmd) > 2)
 	{
 		write(2, "Minishell: cd: too many arguments\n", 35);
-		env->ex_code = 1;
+		g_ex_code = 1;
 		return ;
 	}
 	tmp = find_on_env(env->envp, "HOME");
@@ -99,7 +98,7 @@ void	builtin_cd(t_env *env, t_cmd *cmd)
 	free(tmp);
 	if(!cmd->cmd[1] && exec_cd(home_path, env))
 	{
-		env->ex_code = 0;
+		g_ex_code = 0;
 		free(home_path);
 		return ;
 	}
@@ -107,7 +106,7 @@ void	builtin_cd(t_env *env, t_cmd *cmd)
 	{
 		if(ft_strcmp(cmd->cmd[1], "--") == 0 && exec_cd(home_path, env))
 		{
-			env->ex_code = 0;
+			g_ex_code = 0;
 			free(home_path);
 			return ;
 		}

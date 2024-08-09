@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:55 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/08 20:42:20 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:15:34 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	builtin_exit(t_cmd *ms, char **cmd, t_env *env)
 	if (cmd[1] && cmd[2])
 	{
 		write(2, "Minishell: exit: Too many arguments\n", 37);
-		env->ex_code = 1;
+		g_ex_code = 1;
 		return ;
 	}
 	else if(cmd[1] && !ft_isnumber(cmd[1]))

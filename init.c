@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/02 18:25:47 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:14:52 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int check_input(char *input, t_env *env)
         if (input[i] == '\4')
         {
             if (prev_pipe)
-                return (env->ex_code = 2, write(2, "syntax error near unexpected token '|'\n", 40), 0);
+                return (g_ex_code = 2, write(2, "syntax error near unexpected token '|'\n", 40), 0);
             prev_pipe = 1;
         }
         else if (input[i] != '\0')
@@ -87,7 +87,7 @@ int check_input(char *input, t_env *env)
         i++;
     }
     if (prev_pipe)
-        return (env->ex_code = 2, write(2, "syntax error near unexpected token 'newline'\n", 46), 0);
+        return (g_ex_code = 2, write(2, "syntax error near unexpected token 'newline'\n", 46), 0);
     return 1;
 }
 
