@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:18:51 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/09 17:14:52 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 20:53:57 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,12 @@ t_cmd   *create_cmd(char *sep_cmd, int i, char **envp)
     if (!cmd)
         return (NULL);
     cmd->cmd = ft_split(sep_cmd, '\3');
-    while (cmd->cmd[j] && (cmd->path = get_path(cmd->cmd[j], envp)) == NULL)
+    cmd->path = get_path(cmd->cmd[j], envp);
+    while (cmd->cmd[j] && (cmd->path == NULL))
+    {
+        cmd->path = get_path(cmd->cmd[j], envp);
         j++;
+    }
     if (ft_strncmp(cmd->cmd[0], "./", 2) == 0)
         cmd->path = ft_strdup(cmd->cmd[0]);
     cmd->nb_cmds = i + 1;

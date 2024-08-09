@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/09 19:19:06 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 19:58:35 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*Anda com os elementos para a esquerda e remove a redirection e o file*/
 void remove_redirection(t_cmd *cmd, int i)
 {
-    if (cmd->cmd[i + 2])
+    if(cmd->cmd[i + 2])
     {
         while (cmd->cmd[i + 2])
         {
@@ -31,7 +31,7 @@ void remove_redirection(t_cmd *cmd, int i)
         free(cmd->cmd[i]);
         free(cmd->cmd[i + 1]);
         cmd->cmd[i] = NULL;
-        cmd->cmd[i + 1] = NULL;
+        cmd->cmd[i + 1] = NULL;   
     }
 }
 

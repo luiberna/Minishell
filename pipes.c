@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/09 17:39:49 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 21:05:43 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,26 +43,29 @@ void error_msg(char *str, int ex_nb)
 void execve_aux(t_cmd *cmd, t_env *env)
 {
     char *path;
-
-    path = get_path(cmd->cmd[0], env->envp);
-    if (!cmd->cmd || !cmd->cmd[0])
-        free(cmd->path);
-    if (cmd->cmd[0][0] == '/' && (access(cmd->cmd[0], F_OK) == 0))
+    
+    if (cmd->cmd[0])
     {
-        free(cmd->path);
-        cmd->path = ft_strdup(cmd->cmd[0]);
-    }
-    if (access(cmd->cmd[0], X_OK) != 0 && path == NULL)
-    {
+        path = get_path(cmd->cmd[0], env->envp);
+        if (!cmd->cmd || !cmd->cmd[0])
+            free(cmd->path);
+        if (cmd->cmd[0][0] == '/' && (access(cmd->cmd[0], F_OK) == 0))
+        {
+            free(cmd->path);
+            cmd->path = ft_strdup(cmd->cmd[0]);
+        }
+        if (access(cmd->cmd[0], X_OK) != 0 && path == NULL)
+        {
+            free(path);
+            error_msg("Error on execve", 127);
+        }
+        if (execute(cmd, env) == -1)
+        {
+            free(path);
+            error_msg("Error on execve", 127);
+        }
         free(path);
-        error_msg("Error on execve", 127);
     }
-    if (execute(cmd, env) == -1)
-    {
-        free(path);
-        error_msg("Error on execve", 127);
-    }
-    free(path);
     exit(1);
 }
 
@@ -149,7 +152,7 @@ void pipes_exec(t_cmd *cmd, t_env *env)
 			;
         else if (waitpid(-1, &status, 0) == -1) //O primeiro -1 define que o wait deve esperar por qualquer child process
             error_msg("Error on waitpid", 1);
-        if (WIFEXITED(status))
+        if (!is_builtin(curr->cmd[0]) && WIFEXITED(status))
             g_ex_code = WEXITSTATUS(status);
         curr = curr->next;
     }
