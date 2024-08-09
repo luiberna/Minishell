@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 11:58:43 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/07 20:20:19 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 01:33:22 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,24 @@ typedef struct s_cmd
     struct s_cmd *next;
 }               t_cmd;
 
+typedef enum e_err_msg
+{
+	CMD_NOT_FOUND,
+	NO_FILE,
+	PERM_DENIED,
+	AMBIGOUS_MSG,
+	TOO_MANY_ARGS,
+	NUM_REQUIRED,
+}           t_err_msg;
+
+typedef struct s_error
+{
+	t_err_msg type;
+	char *msg;
+}       t_error;
+
 //signals
-void	signals_default(t_env *env);
+void	signals_default(void);
 
 //builtins
 void    var_exists(char *var, char *value, t_env *env);

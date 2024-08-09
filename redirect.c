@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:47:09 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/07 15:37:08 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:25:24 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,12 @@ void appending_out(t_cmd *cmd, int i)
     close(file_out);
 }
 
+void	signals_here_doc(int sign)
+{
+	if (sign == SIGINT)
+		exit(130);
+}
+
 void here_doc(t_cmd *cmd, int i, int write_fd) 
 {
     char *line;
@@ -83,9 +89,12 @@ void here_doc(t_cmd *cmd, int i, int write_fd)
         error_msg("Parse error near '<<'", 2);
     while (1)
     {
+        signal(SIGINT, signals_here_doc);
         line = readline("> ");
         if (line == NULL || strcmp(line, cmd->cmd[i + 1]) == 0)
         {
+            free(cmd->cmd[i]);
+            free(cmd->cmd[i + 1]);
             free(line);
             break;
         }

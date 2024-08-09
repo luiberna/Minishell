@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 20:16:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/07 20:45:52 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 02:13:08 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,11 @@ void execve_aux(t_cmd *cmd, t_env *env)
     free(path);
     exit(1);
 }
+void	signals_default2(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
 void command_exec(t_cmd *cmd, t_env *env)
 {
@@ -74,6 +79,7 @@ void command_exec(t_cmd *cmd, t_env *env)
     if (pid == 0) //Child process
     {
         redirect_here(cmd);
+        signals_default2();
         if (cmd->fd[0] > 2)
         {
             dup2(cmd->fd[0], STDIN_FILENO); //Redireciona o input do comando anterior

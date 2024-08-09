@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 16:23:52 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/07 19:40:08 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 02:21:05 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	handle_quit(int sign)
 	pid = waitpid(-1, &status, WNOHANG);
 	if (pid == -1)
 	{
-		rl_replace_line("  ", 0);
+		rl_replace_line("   ", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}
@@ -47,10 +47,10 @@ void	handle_sign(int sign)
 	}
 }
 
-void	signals_default(t_env *env)
+void	signals_default(void)
 {
 	signal(SIGINT, handle_sign);
-	signal(SIGQUIT, handle_quit);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 int main (int argc, char **argv, char **envp)
@@ -64,7 +64,7 @@ int main (int argc, char **argv, char **envp)
     g_env = get_env(envp);
     while (1) 
     {
-        signals_default(g_env);
+        signals_default();
         input = readline("DrunkShell> ");
         if (input && *input)
         {

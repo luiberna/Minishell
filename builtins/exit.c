@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:07:55 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/08/07 15:09:57 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/08 20:42:20 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,7 @@ int		ft_isnumber(char *str)
 	return (1);
 }
 
-typedef enum e_err_msg
-{
-	CMD_NOT_FOUND,
-	NO_FILE,
-	PERM_DENIED,
-	AMBIGOUS_MSG,
-	TOO_MANY_ARGS,
-	NUM_REQUIRED,
-} err_msg;
-
-typedef struct t_error
-{
-	err_msg type;
-	char *msg;
-} s_error;
-
-//Precisei de mudar o tipo da funcao ft_putstr_fd para int devido aos returns
-
-int		print_err(s_error err)
+int		print_err(t_error err)
 {
 	if(err.type == CMD_NOT_FOUND)
 		return(ft_putstr_fd(err.msg, 2), ft_putstr_fd(": command not found\n", 2));
@@ -86,7 +68,7 @@ int		exit_atoi(t_cmd *ms, char *str)
 	ignore_space_set_sign(str, &i, &sign);
 	if(!ft_isnumber(str + i))
 	{
-		e_status = print_err((s_error){NUM_REQUIRED, str});
+		e_status = print_err((t_error){NUM_REQUIRED, str});
 		(free_cmd(ms), exit(e_status));
 	}
 	while(str[i])
@@ -94,7 +76,7 @@ int		exit_atoi(t_cmd *ms, char *str)
 		res = res * 10 + (str[i] - '0');
 		if(res > LONG_MAX)
 		{
-			e_status = print_err((s_error){NUM_REQUIRED, str});
+			e_status = print_err((t_error){NUM_REQUIRED, str});
 			(free_cmd(ms), exit(e_status));
 		}
 		i++;
@@ -102,27 +84,25 @@ int		exit_atoi(t_cmd *ms, char *str)
 	return((res * sign) % 256);
 }
 
+
 void	builtin_exit(t_cmd *ms, char **cmd, t_env *env)
 {
 	int e_status;
 
 	e_status = 0;
-	if(cmd[0])
+	if (cmd[1] && cmd[2])
 	{
-		if (cmd[1] && cmd[2])
-		{
-			write(2, "Minishell: exit: Too many arguments\n", 37);
-			env->ex_code = 1;
-			return ;
-		}
-		else if(cmd[1] && !ft_isnumber(cmd[1]))
-		{
-			e_status = print_err((s_error){TOO_MANY_ARGS, cmd[1]});
-			(free_cmd(ms), exit(2));
-		}
-		else if(cmd[1])
-			e_status = exit_atoi(ms, cmd[1]);
+		write(2, "Minishell: exit: Too many arguments\n", 37);
+		env->ex_code = 1;
+		return ;
 	}
+	else if(cmd[1] && !ft_isnumber(cmd[1]))
+	{
+		e_status = print_err((t_error){TOO_MANY_ARGS, cmd[1]});
+		(free_cmd(ms), exit(2));
+	}
+	else if(cmd[1])
+		e_status = exit_atoi(ms, cmd[1]);
 	free_cmd(ms);
 	free_list(env->envp);
     free(env);

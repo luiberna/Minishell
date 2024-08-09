@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 11:24:26 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/01 18:56:06 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/08 19:47:24 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ void    free_cmd(t_cmd *cmd)
     {
         curr = cmd;
         cmd = cmd->next;
+        if (curr->path && curr->path != curr->cmd[0])
+            free(curr->path);
         if (curr->cmd)
             free_list(curr->cmd);
-        if (curr->path && curr->path != curr->cmd[0]) //Make sure not to double free
-            free(curr->path);
         if (curr->fd[0] != -1)
             close(curr->fd[0]);
         if (curr->fd[1] != -1)

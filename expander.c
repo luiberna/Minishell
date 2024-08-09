@@ -6,7 +6,7 @@
 /*   By: luiberna <luiberna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 17:18:53 by luiberna          #+#    #+#             */
-/*   Updated: 2024/08/07 15:26:01 by luiberna         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:40:01 by luiberna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char    *get_end_str(char *str)
         end_str = ft_strdup(&str[i + 2]);
         return (end_str);
     }
-    while(str[i] && str[i] != ' ' && str[i] != '\"' && str[i] != '\'')
+    while(str[i] && str[i] != ' ' && str[i] != '\"' && str[i] != '\'' && str[i] != '=')
         i++;
     if (str[i])
     {
@@ -71,7 +71,7 @@ char    *get_env_value(char *str, t_env *env)
 
     i = 0;
     name_len = 0;
-    while (str[i] != ' ' && str[i] && str[i] != '\"' && str[i] != '\'')
+    while (str[i] != ' ' && str[i] && str[i] != '\"' && str[i] != '\'' && str[i] != '=')
     {
         name_len++;
         i++;
@@ -153,7 +153,7 @@ char    *expand(char *str, t_env *env)
 
 int verify_next_char(char a)
 {
-    if (a && ft_isalnum(a) || a == '?')
+    if (a && ft_isalnum(a) || a == '?' || a == '_')
         return (1);
     return (0);
 }
