@@ -73,136 +73,195 @@ Exit the shell with:
 
 ---
 
-## How to Use
+## How My Minishell Works Internally
 
-### Basic Commands
-```bash
-ls -la
-whoami
-/bin/echo hello
-./program arg1 arg2
+### Data Structures
+
+#### `t_cmd`
+Represents a single command in a pipeline.
+
+```c
+typedef struct s_cmd
+{
+    char            **cmd;
+    char            *path;
+    int             fd[2];
+    pid_t           pid;
+    int             nb_cmds;
+    struct s_cmd    *next;
+}   t_cmd;
 ```
 
-### Pipes
-```bash
-ls -la | grep minishell | wc -l
+Each node corresponds to one command between pipes. The linked list represents
+the full pipeline.
+
+---
+
+#### `t_env`
+Stores environment variables.
+
+```c
+typedef struct s_env
+{
+    char            **envp;
+    struct s_env    *next;
+}   t_env;
 ```
 
-### Redirections
-```bash
-echo hello > out.txt
-echo again >> out.txt
-cat < out.txt
+The `envp` array is used for variable expansion and passed directly to `execve()`.
+
+---
+
+### Global State
+
+```c
+extern int  g_ex_code;
 ```
 
-### Heredoc
-```bash
-cat << EOF
-line one
-line two
-EOF
-```
+Tracks the exit status of the last executed command and is used for `$?` expansion.
 
-### Variable Expansion
-```bash
-echo $HOME
-echo $?
+---
+
+## Execution Flow
+
+```
+Read Input
+ → Lexer
+ → Syntax Check
+ → Command List Creation
+ → Expansion
+ → Quote Removal
+ → Pipes & Redirections
+ → Execution
+ → Cleanup
 ```
 
 ---
 
-## Builtin Commands
+## Parser
+The shell waits for user input using `readline()`.
+If the input is non-empty, it is added to the command history.
+An empty input or `Ctrl-D` causes the shell to exit.
+The parser is split into two stages:
 
-### echo
-Prints arguments to stdout.
-Option `-n` disables the trailing newline.
+### Lexer
+The lexer scans the raw input character by character and transforms it into a structured format.
+It inserts internal separators only outside of quotes:
+- `\3` to separate arguments
+- `\4` to separate commands (pipes)
 
-### cd
-Changes the current working directory.
+Redirection operators (`<`, `>`, `<<`, `>>`) are isolated so they can be processed independently later.
 
-### pwd
-Prints the current working directory.
-
-### env
-Prints the current environment variables.
-
-### export
-Sets or updates environment variables.
-
-### unset
-Removes environment variables.
-
-### exit
-Exits the shell with an optional numeric status.
+This allows clean splitting later without breaking quoted strings.
 
 ---
 
-## Command Difficulty Levels
-
-### Easy commands
-- Simple external commands (`ls`, `cat`, `wc`)
-- Builtins without pipes
-- Single redirections
-- Basic variable expansion
-
-### Medium commands
-- Multiple pipes
-- Pipes with redirections
-- Builtins inside pipelines (non-stateful)
-
-### Hard commands
-- Heredoc combined with pipes
-- Complex quoting and expansions
-- Syntax edge cases
-- Stateful builtins inside pipelines (`cd`, `export`, `unset`)
+### Command Construction
+- Input is split by `\4` into pipeline segments
+- Each segment is split by `\3` into arguments
+- A linked list of `t_cmd` is created
 
 ---
 
-## Code structure file by file
+## Syntax Errors
 
-### minishell.c
-Main loop:
-- Reads input with `readline`
-- Tokenizes input
-- Expands variables
-- Removes quotes
-- Executes commands
-- Frees memory
+Minishell validates syntax before execution, mainly focusing on pipes:
+- Pipe at beginning
+- Consecutive pipes
+- Pipe at end of input
 
-### parsing.c
-- Lexer implementation
-- Handles quotes and separators
-- Splits input into tokens and pipes
-
-### init.c
-- Builds command linked list
-- Syntax validation
-- Path resolution
-
-### expander.c / expander2.c
-- Handles `$VAR` and `$?` expansion
-
-### pipes.c
-- Pipe setup and execution
-- Forking logic
-- Parent vs child builtin handling
-
-### redirect.c / redirect_aux.c
-- Input/output redirections
-- Heredoc implementation
-
-### exec.c
-- Builtin dispatcher
-- External command execution via `execve`
+On error:
+- An informative message is printed
+- `g_ex_code` is set to `2`
+- The command is not executed
 
 ---
 
-## Limitations imposed in the subject
+## Expander
 
-- No logical operators (`&&`, `||`, `;`)
+The expander processes:
+- Environment variables (`$VAR`)
+- Exit status (`$?`)
+
+Rules:
+- No expansion inside single quotes
+- Expansion allowed in double quotes
+- Empty expansions are removed from argument lists
+
+---
+
+## Here Document (Heredoc)
+
+Heredocs (`<<`) allow inline input for commands.
+
+Implementation:
+- A pipe is created
+- User input is read until the delimiter is reached
+- Content is written to the pipe
+- STDIN is redirected to the pipe read end
+
+Signals are handled so `Ctrl-C` aborts the heredoc cleanly.
+
+---
+
+## Redirections
+
+Supported redirections:
+- `< file`
+- `> file`
+- `>> file`
+- `<< limiter`
+
+Redirections are applied in the child process before execution using `dup2()`.
+Redirection tokens are removed before calling `execve()`.
+
+---
+
+## Pipes
+
+Each pipe:
+- Creates a connection between commands
+- Redirects STDOUT of one command to STDIN of the next
+- Forks processes accordingly
+
+Builtins inside pipelines are executed in child processes.
+
+---
+
+## Signals
+
+- `Ctrl-C` (SIGINT):
+  - Clears current input
+  - Interrupts running commands
+  - Sets exit code to `130`
+- `Ctrl-\` (SIGQUIT):
+  - Ignored in interactive mode
+  - Default behavior in child processes
+
+---
+
+## Built-in Commands
+
+Builtins are handled internally:
+- `cd`
+- `echo`
+- `pwd`
+- `export`
+- `unset`
+- `env`
+- `exit`
+
+Stateful builtins (`cd`, `export`, `unset`, `exit`) execute in the parent process
+to preserve shell state.
+
+---
+
+## Limitations
+
+- No `&&`, `||`, or `;`
 - No wildcard expansion (`*`)
-- No job control (`fg`, `bg`, `jobs`)
-- No command substitution (`$(...)`)
+- No job control
+- No command substitution
 
 ---
 
