@@ -1,4 +1,4 @@
-# Minishell (DrunkShell)
+# Minishell
 
 A small, from-scratch Unix-like shell written in C.
 This shell parses user input, handles pipes, redirections, environment expansion,
