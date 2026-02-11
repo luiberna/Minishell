@@ -154,8 +154,6 @@ Redirection operators (`<`, `>`, `<<`, `>>`) are isolated so they can be process
 
 This allows clean splitting later without breaking quoted strings.
 
----
-
 ### Command Construction
 - Input is split by `\4` into pipeline segments
 - Each segment is split by `\3` into arguments
