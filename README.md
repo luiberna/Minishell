@@ -136,6 +136,8 @@ Read Input
  → Cleanup
 ```
 
+![shell_procces](https://github.com/user-attachments/assets/50bdb5f7-af15-4dd9-875a-f44e12e2287a)
+
 ---
 
 ## Parser
@@ -185,6 +187,8 @@ Rules:
 - No expansion inside single quotes
 - Expansion allowed in double quotes
 - Empty expansions are removed from argument lists
+  
+<img width="569" height="453" alt="expansion" src="https://github.com/user-attachments/assets/0b0a44ad-907d-4bab-884f-b0340b7fff88" />
 
 ---
 
